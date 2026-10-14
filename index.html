@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELLO VOCA</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka', 'Nunito', 'Arial Round MT Bold', sans-serif;
+            user-select: none;
+        }
+
+        body {
+            /* 무지개빛 화려하고 부드러운 그라데이션 배경 */
+            background: linear-gradient(135deg, #FF9AA2 0%, #FFB7B2 20%, #FFDAC1 40%, #E2F0CB 60%, #B5EAD7 80%, #C7CEEA 100%);
+            background-size: 400% 400%;
+            animation: rainbowBg 12s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes rainbowBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            background: #FFFFFF;
+            border-radius: 36px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 6px solid #FFF8DC;
+            position: relative;
+        }
+
+        header {
+            padding: 24px 20px 14px;
+            text-align: center;
+            background: #FFFFFF;
+        }
+
+        .app-title {
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #FF595E, #FFCA3A, #8AC926, #1982C4, #6A4C93);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+            animation: bounceTitle 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounceTitle {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-3px); }
+        }
+
+        .app-subtitle {
+            font-size: 15px;
+            color: #FF70A6;
+            margin-top: 4px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .category-tabs {
+            display: flex;
+            padding: 6px;
+            background: #FFF0F3;
+            border-radius: 20px;
+            margin: 0 20px 16px;
+            gap: 6px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #A0A0A0;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: #FF477E;
+            color: #FFFFFF;
+            box-shadow: 0 4px 15px rgba(255, 71, 126, 0.3);
+        }
+
+        .view-container {
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card {
+            width: 100%;
+            background: #FFFDF0;
+            border-radius: 28px;
+            padding: 40px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 4px dashed #FFB703;
+            min-height: 240px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+
+        .word-english {
+            font-size: 48px;
+            font-weight: 900;
+            color: #3A86FF;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0px #FFD166;
+        }
+
+        .word-korean {
+            font-size: 26px;
+            font-weight: 800;
+            color: #FF006E;
+        }
+
+        /* 성취감 응원 카드 스타일 */
+        .cheer-card {
+            width: 100%;
+            background: #EAF8FF;
+            border-radius: 28px;
+            padding: 30px 20px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 4px dashed #3A86FF;
+            min-height: 240px;
+            text-align: center;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .cheer-emoji {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .cheer-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: #3A86FF;
+            margin-bottom: 6px;
+        }
+
+        .cheer-desc {
+            font-size: 16px;
+            font-weight: 800;
+            color: #FF006E;
+        }
+
+        .page-indicator {
+            margin-top: 16px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #8338EC;
+            background: #F1E5FF;
+            padding: 4px 14px;
+            border-radius: 20px;
+        }
+
+        .grid-view {
+            width: 100%;
+            max-height: 280px;
+            overflow-y: auto;
+            display: none;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 4px;
+        }
+
+        .grid-item {
+            background: #F8F9FA;
+            border: 3px solid #E9ECEF;
+            border-radius: 18px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .grid-item:active {
+            transform: scale(0.95);
+            background: #FFE5EC;
+            border-color: #FF477E;
+        }
+
+        .grid-item-text .en {
+            font-size: 17px;
+            font-weight: 900;
+            color: #3A86FF;
+            text-align: center;
+        }
+
+        .grid-item-text .ko {
+            font-size: 13px;
+            font-weight: 800;
+            color: #FF006E;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .navigation {
+            display: flex;
+            padding: 20px;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            height: 58px;
+            border: none;
+            border-radius: 20px;
+            font-size: 17px;
+            font-weight: 900;
+            cursor: pointer;
+            color: #FFFFFF;
+            transition: transform 0.1s ease, filter 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.94);
+        }
+
+        .btn-prev { background: #FFB703; }
+        .btn-list { background: #8338EC; font-size: 15px; }
+        .btn-next { background: #3A86FF; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <div class="app-title">HELLO VOCA</div>
+            <div class="app-subtitle">🌈 REPEAT & CHEER 🌈</div>
+        </header>
+
+        <div class="category-tabs">
+            <button class="tab-btn active" id="tab-easy" onclick="changeCategory('easy')">🌟 EASY (1-10)</button>
+            <button class="tab-btn" id="tab-hard" onclick="changeCategory('hard')">🚀 LEVEL UP (11-20)</button>
+        </div>
+
+        <div class="view-container">
+            <!-- 단어 카드 화면 -->
+            <div class="card" id="cardView">
+                <div class="word-english" id="textEnglish">Apple</div>
+                <div class="word-korean" id="textKorean">사과</div>
+            </div>
+
+            <!-- 성취감 응원 화면 (세트 완료 시 표시) -->
+            <div class="cheer-card" id="cheerView">
+                <div class="cheer-emoji" id="cheerEmoji">🎉</div>
+                <div class="cheer-title" id="cheerTitle">참 잘했어요!</div>
+                <div class="cheer-desc" id="cheerDesc">멋지게 단어를 복습했어요!</div>
+            </div>
+
+            <!-- 전체 목록 보기 화면 -->
+            <div class="grid-view" id="gridView"></div>
+
+            <div class="page-indicator" id="pageIndicator">1 / 22</div>
+        </div>
+
+        <div class="navigation">
+            <button class="nav-btn btn-prev" onclick="moveCard(-1)">◀ PREV</button>
+            <button class="nav-btn btn-list" id="listToggleBtn" onclick="toggleView()">LIST</button>
+            <button class="nav-btn btn-next" onclick="moveCard(1)">NEXT ▶</button>
+        </div>
+    </div>
+
+    <script>
+        const sourceData = {
+            easy: [
+                { en: "Apple", ko: "사과" },
+                { en: "Cat", ko: "고양이" },
+                { en: "Dog", ko: "강아지" },
+                { en: "Sun", ko: "태양" },
+                { en: "Milk", ko: "우유" },
+                { en: "Car", ko: "자동차" },
+                { en: "Ball", ko: "공" },
+                { en: "Fish", ko: "물고기" },
+                { en: "Tree", ko: "나무" },
+                { en: "Book", ko: "책" }
+            ],
+            hard: [
+                { en: "Elephant", ko: "코끼리" },
+                { en: "Banana", ko: "바나나" },
+                { en: "Rainbow", ko: "무지개" },
+                { en: "Butterfly", ko: "나비" },
+                { en: "Dolphin", ko: "돌고래" },
+                { en: "Airplane", ko: "비행기" },
+                { en: "Strawberry", ko: "딸기" },
+                { en: "Umbrella", ko: "우산" },
+                { en: "Penguin", ko: "펭귄" },
+                { en: "Guitar", ko: "기타" }
+            ]
+        };
+
+        // 반복 패턴 중간중간에 응원 카드를 삽입하여 플레이리스트 구성
+        // 구조: [1~5번 반복] -> [1세트 완료 응원] -> [6~10번 반복] -> [2세트 완료(전체 완료) 응원]
+        function createPlaylistWithCheer(originalList) {
+            const part1 = originalList.slice(0, 5);
+            const part2 = originalList.slice(5, 10);
+            
+            return [
+                ...part1, ...part1, 
+                { type: 'cheer', emoji: '🌟', title: '참 잘했어요!', desc: '첫 번째 세트를 멋지게 끝냈어요!' },
+                ...part2, ...part2, 
+                { type: 'cheer', emoji: '🏆', title: '최고예요!', desc: '모든 단어를 완벽하게 마스터했어요!' }
+            ];
+        }
+
+        const playlistData = {
+            easy: createPlaylistWithCheer(sourceData.easy),
+            hard: createPlaylistWithCheer(sourceData.hard)
+        };
+
+        let currentCategory = 'easy';
+        let currentIndex = 0;
+        let isGridView = false;
+
+        function render() {
+            const playlist = playlistData[currentCategory];
+            
+            if (isGridView) {
+                document.getElementById('cardView').style.display = 'none';
+                document.getElementById('cheerView').style.display = 'none';
+                document.getElementById('gridView').style.display = 'grid';
+                document.getElementById('listToggleBtn').innerText = 'CARD';
+                
+                let gridHtml = '';
+                sourceData[currentCategory].forEach((item, index) => {
+                    gridHtml += `
+                        <div class="grid-item" onclick="selectCard(${index})">
+                            <div class="grid-item-text">
+                                <div class="en">${item.en}</div>
+                                <div class="ko">${item.ko}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById('gridView').innerHTML = gridHtml;
+                document.getElementById('pageIndicator').innerText = `🌈 ORIGINAL LIST (10)`;
+            } else {
+                document.getElementById('gridView').style.display = 'none';
+                document.getElementById('listToggleBtn').innerText = 'LIST';
+
+                const currentItem = playlist[currentIndex];
+
+                if (currentItem.type === 'cheer') {
+                    // 응원 카드 표시
+                    document.getElementById('cardView').style.display = 'none';
+                    document.getElementById('cheerView').style.display = 'flex';
+                    document.getElementById('cheerEmoji').innerText = currentItem.emoji;
+                    document.getElementById('cheerTitle').innerText = currentItem.title;
+                    document.getElementById('cheerDesc').innerText = currentItem.desc;
+                } else {
+                    // 일반 단어 카드 표시
+                    document.getElementById('cheerView').style.display = 'none';
+                    document.getElementById('cardView').style.display = 'flex';
+                    document.getElementById('textEnglish').innerText = currentItem.en;
+                    document.getElementById('textKorean').innerText = currentItem.ko;
+                }
+
+                document.getElementById('pageIndicator').innerText = `${currentIndex + 1} / ${playlist.length}`;
+            }
+        }
+
+        function changeCategory(category) {
+            currentCategory = category;
+            currentIndex = 0;
+            isGridView = false;
+
+            document.getElementById('tab-easy').classList.toggle('active', category === 'easy');
+            document.getElementById('tab-hard').classList.toggle('active', category === 'hard');
+
+            render();
+        }
+
+        function moveCard(direction) {
+            if (isGridView) {
+                isGridView = false;
+            }
+            const playlistLength = playlistData[currentCategory].length;
+            currentIndex = (currentIndex + direction + playlistLength) % playlistLength;
+            render();
+        }
+
+        function toggleView() {
+            isGridView = !isGridView;
+            render();
+        }
+
+        function selectCard(index) {
+            // 목록에서 선택했을 때 해당 단어가 등장하는 첫 번째 위치로 이동
+            const playlist = playlistData[currentCategory];
+            const targetWord = sourceData[currentCategory][index].en;
+            
+            const foundIndex = playlist.findIndex(item => item.en === targetWord);
+            if (foundIndex !== -1) {
+                currentIndex = foundIndex;
+            }
+            
+            isGridView = false;
+            render();
+        }
+
+        window.onload = render;
+    </script>
+</body>
+</html>
